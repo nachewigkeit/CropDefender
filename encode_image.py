@@ -13,10 +13,10 @@ BCH_BITS = 5
 def main():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, default=r"saved_models/0pad/encoder.pth")
+    parser.add_argument('--model', type=str, default=r"saved_models/crop/encoder.pth")
     parser.add_argument('--image', type=str, default=None)
     parser.add_argument('--images_dir', type=str, default=r"E:\dataset\Caltech-101\subset")
-    parser.add_argument('--save_dir', type=str, default=r"E:\dataset\stegastamp_0pad")
+    parser.add_argument('--save_dir', type=str, default=r"E:\dataset\stegastamp_crop")
     parser.add_argument('--secret', type=str, default='MITPBL')
     parser.add_argument('--secret_size', type=int, default=100)
     args = parser.parse_args()
@@ -62,7 +62,7 @@ def main():
                 image = torch.from_numpy(image).float().unsqueeze(0).cuda()
 
                 residual = encoder((secret, image))
-                encoded = torch.nn.Sigmoid()(image + residual)
+                encoded = torch.nn.Sigmoid()(image + residual - 0.5)
                 encoded = np.array(encoded.squeeze(0).cpu() * 255, dtype=np.uint8).transpose((1, 2, 0))
 
                 save_name = os.path.basename(filename).split('.')[0]

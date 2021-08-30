@@ -157,16 +157,15 @@ class StegaStampDecoder(nn.Module):
         self.secret_size = secret_size
         self.stn = SpatialTransformerNetwork()
         self.decoder = nn.Sequential(
-            Conv2D(3, 32, 3, strides=2, activation='relu', pad=0),
-            Conv2D(32, 32, 3, activation='relu', pad=0),
-            Conv2D(32, 64, 3, strides=2, activation='relu', pad=0),
-            Conv2D(64, 64, 3, activation='relu', pad=0),
-            Conv2D(64, 64, 3, strides=2, activation='relu', pad=0),
-            Conv2D(64, 128, 3, strides=2, activation='relu', pad=0),
-            Conv2D(128, 128, 3, strides=2, activation='relu', pad=0),
+            Conv2D(3, 32, 3, strides=2, activation='relu'),
+            Conv2D(32, 32, 3, activation='relu'),
+            Conv2D(32, 64, 3, strides=2, activation='relu'),
+            Conv2D(64, 64, 3, activation='relu'),
+            Conv2D(64, 64, 3, strides=2, activation='relu'),
+            Conv2D(64, 128, 3, strides=2, activation='relu'),
+            Conv2D(128, 128, 3, strides=2, activation='relu'),
             Flatten(),
-            # Dense(21632, 512, activation='relu'),
-            Dense(15488, 512, activation='relu'),
+            Dense(21632, 512, activation='relu'),
             Dense(512, secret_size, activation='sigmoid'))
 
     def forward(self, image):
@@ -373,11 +372,13 @@ def build_model(encoder, decoder, discriminator, loss_combine, lpips_fn, secret_
     writer.add_scalar('metric/bit_acc', bit_acc, global_step)
     writer.add_scalar('metric/str_acc', str_acc, global_step)
     if global_step % 100 == 0:
+        '''
         writer.add_image('input/image_input', image_input[0], global_step)
         writer.add_image('input/image_warped', input_warped[0], global_step)
         writer.add_image('encoded/encoded_warped', encoded_warped[0], global_step)
         writer.add_image('encoded/encoded_image', encoded_image[0], global_step)
         writer.add_image('transformed/transformed_image', transformed_image[0], global_step)
+        '''
 
     return loss, secret_loss, D_loss, bit_acc, str_acc
 

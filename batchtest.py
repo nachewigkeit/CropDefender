@@ -5,6 +5,7 @@ import glob
 from tqdm import tqdm
 import torch
 import matplotlib.pyplot as plt
+from model import StegaStampDecoder
 
 BCH_POLYNOMIAL = 137
 BCH_BITS = 5
@@ -51,10 +52,13 @@ def get_acc(true, pred):
 if __name__ == "__main__":
 
     dirPath = r"E:/dataset/stegastamp_crop"
-    modelPath = r'saved_models/crop/decoder.pth'
+    modelPath = r'saved_models/decoder.pth'
     file_list = glob.glob(dirPath + '/*.png')
 
-    model = get_model(modelPath)
+    model = StegaStampDecoder().cuda()
+    model.load_state_dict(torch.load(modelPath))
+
+    model.eval()
     bitstring = get_bits()
 
     store = []
